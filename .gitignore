@@ -1,5 +1,6 @@
 /node_modules/
 /typings/
+*.tokens
 
 # Cruft
 .DS_Store

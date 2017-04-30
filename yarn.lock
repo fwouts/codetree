@@ -10,6 +10,14 @@ ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
 
+antlr4ts-cli@^0.4.0-alpha.4:
+  version "0.4.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/antlr4ts-cli/-/antlr4ts-cli-0.4.0-alpha.4.tgz#ab43073687b034f6a25b1f46a581bf79c6c28dd7"
+
+antlr4ts@^0.4.0-alpha.4:
+  version "0.4.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/antlr4ts/-/antlr4ts-0.4.0-alpha.4.tgz#0a0a705e112554373d984f56783af69a399e27b3"
+
 babel-code-frame@^6.22.0:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/babel-code-frame/-/babel-code-frame-6.22.0.tgz#027620bee567a88c32561574e7fd0801d33118e4"
