@@ -1,4 +1,4 @@
-// Generated from examples/java8/Java8.g4 by ANTLR 4.6-SNAPSHOT
+// Generated from src/parsers/examples/java8/Java8.g4 by ANTLR 4.6-SNAPSHOT
 
 
 import { ATN } from 'antlr4ts/atn/ATN';
