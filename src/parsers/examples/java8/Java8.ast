@@ -1,0 +1,12 @@
+compilationUnit:
+	CompilationUnit(
+		package: ?packageDeclaration
+	)
+
+packageDeclaration:
+	PackageDeclaration(
+		path: [Identifier]
+	)
+
+Identifier:
+	$text

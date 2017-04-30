@@ -5,15 +5,17 @@
   "author": "Francois Wouts",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/dev.ts",
+    "dev": "nodemon -e json,ts,ast --exec ./node_modules/.bin/ts-node -- ./src/dev.ts",
     "lint": "tslint -c tslint.json 'src/**/*.ts' -e 'src/parsers/**/*.ts'",
     "validate": "npm ls",
+    "generate:Ast": "antlr4ts -no-listener -no-visitor src/parsers/ast/Ast.g4",
     "generate:Java8": "antlr4ts -no-listener -no-visitor src/parsers/examples/java8/Java8.g4"
   },
   "pre-commit": [
     "lint"
   ],
   "devDependencies": {
+    "@types/node": "^7.0.14",
     "antlr4ts-cli": "^0.4.0-alpha.4",
     "nodemon": "^1.11.0",
     "precommit-hook": "^3.0.0",
