@@ -1,0 +1,33 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended",
+    "tslint-eslint-rules"
+  ],
+  "jsRules": {},
+  "rules": {
+    "member-access": [
+      true,
+      "no-public"
+    ],
+    "prefer-const": false,
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore"
+    ],
+    // tslint-eslint-rules
+    "ter-indent": [
+      true,
+      2,
+      {
+        "MemberExpression": 2
+      }
+    ]
+  }
+}

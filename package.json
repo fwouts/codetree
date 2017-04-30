@@ -1,0 +1,20 @@
+{
+  "name": "antlr4-ast",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Francois Wouts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "validate": "npm ls"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "devDependencies": {
+    "precommit-hook": "^3.0.0",
+    "tslint": "^5.1.0",
+    "tslint-eslint-rules": "^4.0.0",
+    "typescript": "^2.3.2"
+  }
+}

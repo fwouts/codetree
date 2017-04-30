@@ -1,0 +1,7 @@
+/node_modules/
+/typings/
+
+# Cruft
+.DS_Store
+npm-debug.log
+.idea
