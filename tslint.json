@@ -10,6 +10,8 @@
       true,
       "no-public"
     ],
+    // TODO: Enforce no-console.
+    "no-console": false,
     "prefer-const": false,
     "quotemark": [
       true,
