@@ -6,3 +6,4 @@
 .DS_Store
 npm-debug.log
 .idea
+.antlr

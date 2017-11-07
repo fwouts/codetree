@@ -9,9 +9,8 @@
       "nodemon -e json,ts,ast --exec ./node_modules/.bin/ts-node -- ./src/dev.ts",
     "lint": "tslint -c tslint.json 'src/**/*.ts' -e 'src/parsers/**/*.ts'",
     "validate": "npm ls",
-    "generate:Ast": "antlr4ts -no-listener -no-visitor src/parsers/ast/Ast.g4",
-    "generate:Java8":
-      "antlr4ts -no-listener -no-visitor src/parsers/examples/java8/Java8.g4"
+    "generate-grammars":
+      "cd src/parsers/java && antlr4ts -no-listener -no-visitor JavaParser.g4 JavaLexer.g4"
   },
   "pre-commit": ["lint"],
   "devDependencies": {
