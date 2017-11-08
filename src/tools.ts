@@ -10,7 +10,7 @@ export function printSource(node: Node): string {
   }
 }
 
-export function findTree(search: Tree, pattern: Tree) {
+export function findTree(search: Tree, pattern: Node) {
   if (treesMatch(search, pattern)) {
     return true;
   }
