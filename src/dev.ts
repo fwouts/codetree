@@ -30,18 +30,11 @@ function runTypeScriptExample() {
     path.join(__dirname, "example", "example.ts"),
     "utf8"
   );
-  let tree = tsParsing.parse(code, ts.SyntaxKind.SourceFile);
-  if (!(tree instanceof Tree)) {
-    throw new Error();
-  }
+  let tree = tsParsing.parse(code);
   let mutatedTree = tools.transformTree(
     tree,
-    tsParsing.parse("console.log(__);", ts.SyntaxKind.ExpressionStatement),
-    matchedTree =>
-      tsParsing.parse(
-        `console.error("Hi!");`,
-        ts.SyntaxKind.ExpressionStatement
-      )
+    tsParsing.parse("console.log(__);"),
+    matchedTree => tsParsing.parse(`console.error("Hi!");`)
   );
   console.log(tools.printSource(mutatedTree));
 }

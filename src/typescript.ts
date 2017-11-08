@@ -2,31 +2,30 @@ import * as ts from "typescript";
 
 import { Node, Space, Token, Tree } from "./nodes";
 
-export function parse(source: string, syntaxKind: number): Node {
+export function parse(source: string): Tree {
   let sourceFile = ts.createSourceFile(
     "code.ts",
     source,
     ts.ScriptTarget.Latest,
     true
   );
-  let tsNode = findSyntaxKind(sourceFile, syntaxKind);
-  if (!tsNode) {
-    throw new Error("Could not find a node of kind " + syntaxKind);
-  }
-  return createSourceTree(tsNode, source)[0];
+  let tree = createSourceTree(sourceFile, source)[0] as Tree;
+  return findTopTree(tree);
 }
 
-function findSyntaxKind(tsNode: ts.Node, syntaxKind: number): ts.Node | null {
-  if (tsNode.kind === syntaxKind) {
-    return tsNode;
+function findTopTree(tree: Tree): Tree {
+  let childrenWithoutSpaces = tree.children.filter(
+    child => !(child instanceof Space)
+  );
+  if (childrenWithoutSpaces.length !== 1) {
+    return tree;
   }
-  for (let child of tsNode.getChildren()) {
-    let foundNode = findSyntaxKind(child, syntaxKind);
-    if (foundNode) {
-      return foundNode;
-    }
+  let onlyChild = childrenWithoutSpaces[0];
+  if (onlyChild instanceof Tree) {
+    return findTopTree(onlyChild);
+  } else {
+    return tree;
   }
-  return null;
 }
 
 function createSourceTree(
