@@ -28,8 +28,11 @@ export function treesMatch(tree: Tree, pattern: Node) {
   if (pattern instanceof Space) {
     throw new Error("Unexpected space in search pattern.");
   }
-  if (pattern instanceof Token && pattern.text === "__") {
+  if (getText(pattern) === "__") {
     return true;
+  }
+  if (!(pattern instanceof Tree)) {
+    return false;
   }
   let treeChildrenWithoutSpaces = tree.children.filter(
     child => !(child instanceof Space)
@@ -65,6 +68,17 @@ export function treesMatch(tree: Tree, pattern: Node) {
     }
   }
   return true;
+}
+
+function getText(node: Token | Tree): string {
+  if (node instanceof Token) {
+    return node.text;
+  } else {
+    return node.children
+      .filter(childNode => !(childNode instanceof Space))
+      .map(getText)
+      .join("");
+  }
 }
 
 export function transformTree(

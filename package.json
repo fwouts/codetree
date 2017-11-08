@@ -5,14 +5,14 @@
   "author": "Francois Wouts",
   "license": "MIT",
   "scripts": {
-    "dev":
-      "nodemon -e json,ts,ast --exec ./node_modules/.bin/ts-node -- ./src/dev.ts",
+    "dev": "nodemon -e json,ts,ast --exec ./node_modules/.bin/ts-node -- ./src/dev.ts",
     "lint": "tslint -c tslint.json 'src/**/*.ts' -e 'src/parsers/**/*.ts'",
     "validate": "npm ls",
-    "generate-grammars":
-      "cd src/parsers/java && antlr4ts -no-listener -no-visitor JavaParser.g4 JavaLexer.g4"
+    "generate-grammars": "cd src/parsers/java && antlr4ts -no-listener -no-visitor JavaParser.g4 JavaLexer.g4"
   },
-  "pre-commit": ["lint"],
+  "pre-commit": [
+    "lint"
+  ],
   "devDependencies": {
     "@types/node": "^7.0.46",
     "antlr4ts-cli": "^0.4.0-alpha.4",
@@ -21,10 +21,10 @@
     "ts-node": "^3.0.2",
     "tslint": "^5.8.0",
     "tslint-config-prettier": "^1.6.0",
-    "tslint-eslint-rules": "^4.0.0",
-    "typescript": "^2.6.1"
+    "tslint-eslint-rules": "^4.0.0"
   },
   "dependencies": {
-    "antlr4ts": "^0.4.0-alpha.4"
+    "antlr4ts": "^0.4.0-alpha.4",
+    "typescript": "^2.6.1"
   }
 }
