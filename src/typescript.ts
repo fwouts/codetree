@@ -45,7 +45,7 @@ function createSourceTree(
       if (firstChildNode instanceof Tree) {
         while (firstChildNode.children[0] instanceof Space) {
           tree.children.push(firstChildNode.children[0]);
-          firstChildNode.children.splice(1);
+          firstChildNode.children = firstChildNode.children.slice(1);
         }
       }
       tree.children.push(...childNodes);
