@@ -1,12 +1,11 @@
 import * as antlr from "antlr4ts";
 import * as fs from "fs";
 import * as path from "path";
+import * as util from "util";
 
 import { JavaLexer } from "./parsers/java/JavaLexer";
 import { JavaParser } from "./parsers/java/JavaParser";
 import { TerminalNode } from "antlr4ts/tree/TerminalNode";
-
-runExample();
 
 function runExample() {
   let code = fs.readFileSync(
@@ -18,56 +17,113 @@ function runExample() {
   let tokenStream = new antlr.CommonTokenStream(lexer);
   let parser = new JavaParser(tokenStream);
   let compilationUnit = parser.compilationUnit();
-  console.log(reprint(compilationUnit, code));
+  let tree = createSourceTree(compilationUnit, code)[0];
+  console.log(util.inspect(tree, false, Number.MAX_SAFE_INTEGER));
+  console.log(printSource(tree));
 }
 
-function reprint(
-  tree: antlr.ParserRuleContext | TerminalNode,
+class Tree {
+  public children: Node[] = [];
+}
+
+type Node = Tree | Token | Space;
+
+class Token {
+  public text: string;
+
+  constructor(text: string) {
+    this.text = text;
+  }
+}
+
+class Space {
+  public text: string;
+
+  constructor(text: string) {
+    this.text = text;
+  }
+}
+
+function createSourceTree(
+  antlrNode: antlr.ParserRuleContext | TerminalNode,
   fullCode: string,
   codePosition: { charIndex: number } = {
     charIndex: 0
   }
-) {
-  let output: string[] = [];
-  if (tree instanceof antlr.ParserRuleContext) {
-    if (tree.start.startIndex > codePosition.charIndex) {
-      output.push(
-        fullCode.substring(codePosition.charIndex, tree.start.startIndex)
+): Node[] {
+  if (antlrNode instanceof antlr.ParserRuleContext) {
+    let tree = new Tree();
+    if (antlrNode.start.startIndex > codePosition.charIndex) {
+      tree.children.push(
+        new Space(
+          fullCode.substring(codePosition.charIndex, antlrNode.start.startIndex)
+        )
       );
-      codePosition.charIndex = tree.start.startIndex;
+      codePosition.charIndex = antlrNode.start.startIndex;
     }
-    for (let i = 0; i < tree.childCount; i++) {
-      let child = tree.getChild(i);
+    for (let i = 0; i < antlrNode.childCount; i++) {
+      let child = antlrNode.getChild(i);
       if (
         child instanceof antlr.ParserRuleContext ||
         child instanceof TerminalNode
       ) {
-        output = output.concat(reprint(child, fullCode, codePosition));
+        tree.children.push(...createSourceTree(child, fullCode, codePosition));
       } else {
         throw new Error("Unexpected child: " + child);
       }
     }
-    if (tree.stop!.stopIndex > codePosition.charIndex) {
-      output.push(
-        fullCode.substring(codePosition.charIndex, tree.stop!.stopIndex + 1)
+    if (antlrNode.stop!.stopIndex > codePosition.charIndex) {
+      tree.children.push(
+        new Space(
+          fullCode.substring(
+            codePosition.charIndex,
+            antlrNode.stop!.stopIndex + 1
+          )
+        )
       );
-      codePosition.charIndex = tree.stop!.stopIndex + 1;
+      codePosition.charIndex = antlrNode.stop!.stopIndex + 1;
     }
+    return [tree];
   } else {
-    if (tree.symbol.startIndex > codePosition.charIndex) {
-      output.push(
-        fullCode.substring(codePosition.charIndex, tree.symbol.startIndex)
+    let nodes: Node[] = [];
+    if (antlrNode.symbol.startIndex > codePosition.charIndex) {
+      nodes.push(
+        new Space(
+          fullCode.substring(
+            codePosition.charIndex,
+            antlrNode.symbol.startIndex
+          )
+        )
       );
-      codePosition.charIndex = tree.symbol.startIndex;
+      codePosition.charIndex = antlrNode.symbol.startIndex;
     }
-    output.push(tree.text);
-    codePosition.charIndex += tree.text.length;
-    if (tree.symbol.stopIndex > codePosition.charIndex) {
-      output.push(
-        fullCode.substring(codePosition.charIndex, tree.symbol.stopIndex + 1)
+    if (antlrNode.text !== "<EOF>") {
+      nodes.push(new Token(antlrNode.text));
+      codePosition.charIndex += antlrNode.text.length;
+    }
+    if (antlrNode.symbol.stopIndex > codePosition.charIndex) {
+      nodes.push(
+        new Space(
+          fullCode.substring(
+            codePosition.charIndex,
+            antlrNode.symbol.stopIndex + 1
+          )
+        )
       );
-      codePosition.charIndex = tree.symbol.stopIndex + 1;
+      codePosition.charIndex = antlrNode.symbol.stopIndex + 1;
     }
+    return nodes;
   }
-  return output;
 }
+
+function printSource(node: Node): string {
+  if (node instanceof Tree) {
+    return node.children.map(childNode => printSource(childNode)).join("");
+  } else if (node instanceof Token) {
+    return node.text;
+  } else {
+    return node.text;
+  }
+}
+
+runExample();
