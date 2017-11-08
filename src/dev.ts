@@ -22,7 +22,10 @@ function runExample() {
   if (!(patternTree instanceof Tree)) {
     throw new Error();
   }
-  console.log(findTree(tree, patternTree));
+  let mutatedTree = transformTree(tree, patternTree, matchedTree =>
+    parse(`alert("Hi!");`, parser => parser.statement())
+  );
+  console.log(printSource(mutatedTree));
 }
 
 class Tree {
@@ -228,6 +231,40 @@ function treesMatch(tree: Tree, pattern: Tree) {
     }
   }
   return true;
+}
+
+function transformTree(
+  tree: Tree,
+  pattern: Tree,
+  transform: (matchedTree: Tree) => Node
+): Node {
+  let cloned = cloneTree(tree);
+  if (treesMatch(tree, pattern)) {
+    return transform(cloned);
+  }
+  for (let i = 0; i < cloned.children.length; i++) {
+    let child = cloned.children[i];
+    if (child instanceof Tree) {
+      cloned.children[i] = transformTree(child, pattern, transform);
+    }
+  }
+  return cloned;
+}
+
+function cloneTree(tree: Tree): Tree {
+  let cloned = new Tree();
+  cloned.children = tree.children.map(cloneNode);
+  return cloned;
+}
+
+function cloneNode(node: Node): Node {
+  if (node instanceof Tree) {
+    return cloneTree(node);
+  } else if (node instanceof Token) {
+    return new Token(node.tokenType, node.text);
+  } else {
+    return new Space(node.text);
+  }
 }
 
 runExample();
