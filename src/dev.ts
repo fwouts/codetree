@@ -13,8 +13,6 @@ function runExample() {
     "utf8"
   );
   let tree = parse(code, parser => parser.compilationUnit());
-  console.log(util.inspect(tree, false, Number.MAX_SAFE_INTEGER));
-  console.log(printSource(tree));
 }
 
 class Tree {
