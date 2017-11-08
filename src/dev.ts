@@ -23,15 +23,22 @@ function runExample() {
 }
 
 class Tree {
+  public ruleIndex: number;
   public children: Node[] = [];
+
+  constructor(ruleIndex: number) {
+    this.ruleIndex = ruleIndex;
+  }
 }
 
 type Node = Tree | Token | Space;
 
 class Token {
+  public tokenIndex: number;
   public text: string;
 
-  constructor(text: string) {
+  constructor(tokenIndex: number, text: string) {
+    this.tokenIndex = tokenIndex;
     this.text = text;
   }
 }
@@ -52,7 +59,7 @@ function createSourceTree(
   }
 ): Node[] {
   if (antlrNode instanceof antlr.ParserRuleContext) {
-    let tree = new Tree();
+    let tree = new Tree(antlrNode.ruleIndex);
     if (antlrNode.start.startIndex > codePosition.charIndex) {
       tree.children.push(
         new Space(
@@ -98,7 +105,7 @@ function createSourceTree(
       codePosition.charIndex = antlrNode.symbol.startIndex;
     }
     if (antlrNode.text !== "<EOF>") {
-      nodes.push(new Token(antlrNode.text));
+      nodes.push(new Token(antlrNode.symbol.tokenIndex, antlrNode.text));
       codePosition.charIndex += antlrNode.text.length;
     }
     if (antlrNode.symbol.stopIndex > codePosition.charIndex) {
