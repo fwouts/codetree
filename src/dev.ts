@@ -13,6 +13,16 @@ function runExample() {
     "utf8"
   );
   let tree = parse(code, parser => parser.compilationUnit());
+  if (!(tree instanceof Tree)) {
+    throw new Error();
+  }
+  let patternTree = parse(`System.out.println(__);`, parser =>
+    parser.statement()
+  );
+  if (!(patternTree instanceof Tree)) {
+    throw new Error();
+  }
+  console.log(findTree(tree, patternTree));
 }
 
 class Tree {
@@ -132,6 +142,64 @@ function printSource(node: Node): string {
   } else {
     return node.text;
   }
+}
+
+function findTree(search: Tree, pattern: Tree) {
+  if (treesMatch(search, pattern)) {
+    return true;
+  }
+  for (let child of search.children) {
+    if (child instanceof Tree) {
+      if (findTree(child, pattern)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function treesMatch(tree: Tree, pattern: Tree) {
+  let treeChildrenWithoutSpaces = tree.children.filter(
+    child => !(child instanceof Space)
+  );
+  let patternChildrenWithoutSpaces = pattern.children.filter(
+    child => !(child instanceof Space)
+  );
+  if (
+    treeChildrenWithoutSpaces.length !== patternChildrenWithoutSpaces.length
+  ) {
+    // TODO: Consider being more flexible, e.g. a function call with a variable number of arguments will not match
+    // unless it has the exact same number of arguments.
+    return false;
+  }
+  for (let i = 0; i < treeChildrenWithoutSpaces.length; i++) {
+    let child = treeChildrenWithoutSpaces[i];
+    let patternChild = patternChildrenWithoutSpaces[i];
+    if (child instanceof Tree) {
+      if (patternChild instanceof Tree) {
+        if (!treesMatch(child, patternChild)) {
+          return false;
+        }
+      } else if (patternChild instanceof Token && patternChild.text === "__") {
+        // This matches anything.
+        return true;
+      } else {
+        return false;
+      }
+    } else if (child instanceof Token && patternChild instanceof Token) {
+      if (child.tokenType !== patternChild.tokenType) {
+        return false;
+      }
+      if (patternChild.text.indexOf("__") !== -1) {
+        // Ignore text, match anything.
+      } else if (child.text !== patternChild.text) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+  return true;
 }
 
 runExample();
