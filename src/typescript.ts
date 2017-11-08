@@ -39,31 +39,20 @@ function createSourceTree(
   if (!ts.isToken(tsNode)) {
     let childCount = tsNode.getChildCount();
     let tree = new Tree();
-    if (tsNode.pos > codePosition.charIndex) {
-      tree.children.push(
-        new Space(fullCode.substring(codePosition.charIndex, tsNode.pos))
-      );
-      codePosition.charIndex = tsNode.pos;
-    }
-    for (let i = 0; i < childCount; i++) {
-      let child = tsNode.getChildAt(i);
-      tree.children.push(...createSourceTree(child, fullCode, codePosition));
-    }
-    if (tsNode.end > codePosition.charIndex) {
-      tree.children.push(
-        new Space(fullCode.substring(codePosition.charIndex, tsNode.end + 1))
-      );
-      codePosition.charIndex = tsNode.end + 1;
+    for (let child of tsNode.getChildren()) {
+      let childNodes = createSourceTree(child, fullCode, codePosition);
+      let firstChildNode = childNodes[0];
+      if (firstChildNode instanceof Tree) {
+        while (firstChildNode.children[0] instanceof Space) {
+          tree.children.push(firstChildNode.children[0]);
+          firstChildNode.children.splice(1);
+        }
+      }
+      tree.children.push(...childNodes);
     }
     return [tree];
   } else {
     let nodes: Node[] = [];
-    if (tsNode.pos > codePosition.charIndex) {
-      nodes.push(
-        new Space(fullCode.substring(codePosition.charIndex, tsNode.pos))
-      );
-      codePosition.charIndex = tsNode.pos;
-    }
     let fullText = tsNode.getFullText();
     let tokenText = tsNode.getText();
     if (fullText.trim().length === 0) {
@@ -71,11 +60,6 @@ function createSourceTree(
       codePosition.charIndex += fullText.length;
     } else {
       let tokenPositionInFullText = fullText.indexOf(tokenText);
-      if (tokenPositionInFullText === -1) {
-        throw new Error(
-          "Unexpected error when parsing TypeScript: " + fullText
-        );
-      }
       if (tokenPositionInFullText > 0) {
         nodes.push(new Space(fullText.substr(0, tokenPositionInFullText)));
         codePosition.charIndex += tokenPositionInFullText;
