@@ -16,14 +16,10 @@ function runExample() {
   if (!(tree instanceof Tree)) {
     throw new Error();
   }
-  let patternTree = parse(`System.out.println(__);`, parser =>
-    parser.statement()
-  );
-  if (!(patternTree instanceof Tree)) {
-    throw new Error();
-  }
-  let mutatedTree = transformTree(tree, patternTree, matchedTree =>
-    parse(`alert("Hi!");`, parser => parser.statement())
+  let mutatedTree = transformTree(
+    tree,
+    parse(`System.out.println(__);`, parser => parser.statement()),
+    matchedTree => parse(`alert("Hi!");`, parser => parser.statement())
   );
   console.log(printSource(mutatedTree));
 }
@@ -189,7 +185,13 @@ function findTree(search: Tree, pattern: Tree) {
   return false;
 }
 
-function treesMatch(tree: Tree, pattern: Tree) {
+function treesMatch(tree: Tree, pattern: Node) {
+  if (pattern instanceof Space) {
+    throw new Error("Unexpected space in search pattern.");
+  }
+  if (pattern instanceof Token && pattern.text === "__") {
+    return true;
+  }
   let treeChildrenWithoutSpaces = tree.children.filter(
     child => !(child instanceof Space)
   );
@@ -207,14 +209,7 @@ function treesMatch(tree: Tree, pattern: Tree) {
     let child = treeChildrenWithoutSpaces[i];
     let patternChild = patternChildrenWithoutSpaces[i];
     if (child instanceof Tree) {
-      if (patternChild instanceof Tree) {
-        if (!treesMatch(child, patternChild)) {
-          return false;
-        }
-      } else if (patternChild instanceof Token && patternChild.text === "__") {
-        // This matches anything.
-        return true;
-      } else {
+      if (!treesMatch(child, patternChild)) {
         return false;
       }
     } else if (child instanceof Token && patternChild instanceof Token) {
@@ -235,7 +230,7 @@ function treesMatch(tree: Tree, pattern: Tree) {
 
 function transformTree(
   tree: Tree,
-  pattern: Tree,
+  pattern: Node,
   transform: (matchedTree: Tree) => Node
 ): Node {
   let cloned = cloneTree(tree);
