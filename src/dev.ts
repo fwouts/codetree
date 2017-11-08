@@ -27,7 +27,7 @@ function reprint(
   codePosition: { charIndex: number } = {
     charIndex: 0
   }
-): string {
+) {
   let output: string[] = [];
   if (tree instanceof antlr.ParserRuleContext) {
     if (tree.start.startIndex > codePosition.charIndex) {
@@ -42,22 +42,32 @@ function reprint(
         child instanceof antlr.ParserRuleContext ||
         child instanceof TerminalNode
       ) {
-        output.push(reprint(child, fullCode, codePosition));
+        output = output.concat(reprint(child, fullCode, codePosition));
       } else {
         throw new Error("Unexpected child: " + child);
       }
     }
     if (tree.stop!.stopIndex > codePosition.charIndex) {
       output.push(
-        fullCode.substring(codePosition.charIndex, tree.stop!.stopIndex)
+        fullCode.substring(codePosition.charIndex, tree.stop!.stopIndex + 1)
       );
-      codePosition.charIndex = tree.stop!.stopIndex;
+      codePosition.charIndex = tree.stop!.stopIndex + 1;
     }
   } else {
-    output.push(
-      fullCode.substring(codePosition.charIndex, tree.symbol.stopIndex)
-    );
-    codePosition.charIndex = tree.symbol.stopIndex;
+    if (tree.symbol.startIndex > codePosition.charIndex) {
+      output.push(
+        fullCode.substring(codePosition.charIndex, tree.symbol.startIndex)
+      );
+      codePosition.charIndex = tree.symbol.startIndex;
+    }
+    output.push(tree.text);
+    codePosition.charIndex += tree.text.length;
+    if (tree.symbol.stopIndex > codePosition.charIndex) {
+      output.push(
+        fullCode.substring(codePosition.charIndex, tree.symbol.stopIndex + 1)
+      );
+      codePosition.charIndex = tree.symbol.stopIndex + 1;
+    }
   }
-  return output.join("");
+  return output;
 }
