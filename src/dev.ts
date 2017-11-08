@@ -55,8 +55,36 @@ function parse<T extends antlr.ParserRuleContext>(
 ): Node {
   let inputStream = new antlr.ANTLRInputStream(code);
   let lexer = new JavaLexer(inputStream);
+  lexer.removeErrorListeners();
+  lexer.addErrorListener({
+    syntaxError(
+      // tslint:disable-next-line no-any
+      recognizer: antlr.Recognizer<number, any>,
+      offendingSymbol: number | undefined,
+      line: number,
+      charPositionInLine: number,
+      msg: string,
+      e: antlr.RecognitionException | undefined
+    ) {
+      throw new Error(msg + " at " + line + ":" + charPositionInLine);
+    }
+  });
   let tokenStream = new antlr.CommonTokenStream(lexer);
   let parser = new JavaParser(tokenStream);
+  parser.removeErrorListeners();
+  parser.addErrorListener({
+    syntaxError(
+      // tslint:disable-next-line no-any
+      recognizer: antlr.Recognizer<antlr.Token, any>,
+      offendingSymbol: antlr.Token | undefined,
+      line: number,
+      charPositionInLine: number,
+      msg: string,
+      e: antlr.RecognitionException | undefined
+    ) {
+      throw new Error(msg + " at " + line + ":" + charPositionInLine);
+    }
+  });
   let node = rootNode(parser);
   let tree = createSourceTree(node, code)[0];
   return tree;
