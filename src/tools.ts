@@ -41,6 +41,7 @@ export function treesMatch(tree: Tree, pattern: Node) {
     child => !(child instanceof Space)
   );
   if (
+    tree.nodeType !== pattern.nodeType ||
     treeChildrenWithoutSpaces.length !== patternChildrenWithoutSpaces.length
   ) {
     // TODO: Consider being more flexible, e.g. a function call with a variable number of arguments will not match
@@ -100,7 +101,7 @@ export function transformTree(
 }
 
 function cloneTree(tree: Tree): Tree {
-  let cloned = new Tree();
+  let cloned = new Tree(tree.nodeType);
   cloned.children = tree.children.map(cloneNode);
   return cloned;
 }

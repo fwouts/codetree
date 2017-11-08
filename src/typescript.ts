@@ -37,7 +37,7 @@ function createSourceTree(
 ): Node[] {
   if (!ts.isToken(tsNode)) {
     let childCount = tsNode.getChildCount();
-    let tree = new Tree();
+    let tree = new Tree(tsNode.kind);
     for (let child of tsNode.getChildren()) {
       let childNodes = createSourceTree(child, fullCode, codePosition);
       let firstChildNode = childNodes[0];

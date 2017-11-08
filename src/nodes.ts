@@ -1,7 +1,12 @@
 export type Node = Tree | Token | Space;
 
 export class Tree {
+  public nodeType: string | number;
   public children: Node[] = [];
+
+  constructor(nodeType: string | number) {
+    this.nodeType = nodeType;
+  }
 }
 
 export class Token {

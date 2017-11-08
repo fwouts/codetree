@@ -58,7 +58,7 @@ function createSourceTree(
   }
 ): Node[] {
   if (antlrNode instanceof antlr.ParserRuleContext) {
-    let tree = new Tree();
+    let tree = new Tree(antlrNode.constructor.name);
     if (antlrNode.start.startIndex > codePosition.charIndex) {
       tree.children.push(
         new Space(
