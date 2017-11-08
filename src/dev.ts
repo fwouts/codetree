@@ -12,12 +12,7 @@ function runExample() {
     path.join(__dirname, "example", "Example.java"),
     "utf8"
   );
-  let inputStream = new antlr.ANTLRInputStream(code);
-  let lexer = new JavaLexer(inputStream);
-  let tokenStream = new antlr.CommonTokenStream(lexer);
-  let parser = new JavaParser(tokenStream);
-  let compilationUnit = parser.compilationUnit();
-  let tree = createSourceTree(compilationUnit, code)[0];
+  let tree = parse(code, parser => parser.compilationUnit());
   console.log(util.inspect(tree, false, Number.MAX_SAFE_INTEGER));
   console.log(printSource(tree));
 }
@@ -44,6 +39,19 @@ class Space {
   constructor(text: string) {
     this.text = text;
   }
+}
+
+function parse<T extends antlr.ParserRuleContext>(
+  code: string,
+  rootNode: (parser: JavaParser) => T
+): Node {
+  let inputStream = new antlr.ANTLRInputStream(code);
+  let lexer = new JavaLexer(inputStream);
+  let tokenStream = new antlr.CommonTokenStream(lexer);
+  let parser = new JavaParser(tokenStream);
+  let node = rootNode(parser);
+  let tree = createSourceTree(node, code)[0];
+  return tree;
 }
 
 function createSourceTree(
