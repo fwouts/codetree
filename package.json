@@ -1,27 +1,20 @@
 {
-  "name": "antlr4-ast",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "codetree",
+  "version": "0.0.1",
   "author": "Francois Wouts",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon -e json,ts,ast --exec ./node_modules/.bin/ts-node -- ./src/dev.ts",
-    "lint": "tslint -c tslint.json 'src/**/*.ts' -e 'src/parsers/**/*.ts'",
-    "validate": "npm ls",
+    "dev": "nodemon -e json,ts,ast --exec ./node_modules/.bin/ts-node -- ./example/dev.ts",
+    "build": "rimraf dist && tsc && cp package.json dist/src/package.json && cd dist/src && npm install",
+    "publish": "cd dist/src && npm publish",
     "generate-grammars": "cd src/parsers/java && antlr4ts -no-listener -no-visitor JavaParser.g4 JavaLexer.g4"
   },
-  "pre-commit": [
-    "lint"
-  ],
   "devDependencies": {
     "@types/node": "^7.0.46",
     "antlr4ts-cli": "^0.4.0-alpha.4",
     "nodemon": "^1.11.0",
-    "precommit-hook": "^3.0.0",
-    "ts-node": "^3.0.2",
-    "tslint": "^5.8.0",
-    "tslint-config-prettier": "^1.6.0",
-    "tslint-eslint-rules": "^4.0.0"
+    "rimraf": "^2.6.2",
+    "ts-node": "^3.0.2"
   },
   "dependencies": {
     "antlr4ts": "^0.4.0-alpha.4",
