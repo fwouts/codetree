@@ -2,6 +2,7 @@
   "name": "codetree",
   "version": "0.0.1",
   "author": "Francois Wouts",
+  "repository": "https://github.com/fwouts/codetree",
   "license": "MIT",
   "scripts": {
     "dev": "nodemon -e json,ts,ast --exec ./node_modules/.bin/ts-node -- ./example/dev.ts",
