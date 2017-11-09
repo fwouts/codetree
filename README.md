@@ -122,6 +122,14 @@ let mutatedTree = codeTree.transformTree(
 console.log(codeTree.printSource(mutatedTree));
 ```
 
+# FAQ
+
+## Why not simply use search-and-replace or regular expressions?
+
+Unlike search-and-replace approaches, CodeTree operates on "parse trees", and not simply strings. This means that you don't have to worry about spacing, or comments in the middle of the code you're trying to match.
+
+Of course, CodeTree may be overkill for simple changes. It's simply one more tool at your disposal.
+
 ## Where are the tests?
 
 Yes, I should probably write some! For context, CodeTree was written on 8 November 2017. I'll try to write them in the upcoming week.
