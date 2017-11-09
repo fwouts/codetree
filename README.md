@@ -121,3 +121,7 @@ let mutatedTree = codeTree.transformTree(
 // Convert the mutated tree back into source code.
 console.log(codeTree.printSource(mutatedTree));
 ```
+
+## Where are the tests?
+
+Yes, I should probably write some! For context, CodeTree was written on 8 November 2017. I'll try to write them in the upcoming week.
