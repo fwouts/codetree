@@ -10,39 +10,41 @@ export function printSource(node: Node): string {
   }
 }
 
-export function findTree(search: Tree, pattern: Node) {
-  if (treesMatch(search, pattern)) {
-    return true;
+export function findTree(tree: Tree, searchPattern: Node): Tree | null {
+  if (treesMatch(tree, searchPattern)) {
+    return tree;
   }
-  for (let child of search.children) {
+  for (let child of tree.children) {
     if (child instanceof Tree) {
-      if (findTree(child, pattern)) {
-        return true;
+      let found = findTree(child, searchPattern);
+      if (found) {
+        return found;
       }
     }
   }
-  return false;
+  return null;
 }
 
-export function treesMatch(tree: Tree, pattern: Node) {
-  if (pattern instanceof Space) {
-    throw new Error("Unexpected space in search pattern.");
+export function treesMatch(tree: Tree, searchPattern: Node) {
+  if (searchPattern instanceof Space) {
+    throw new Error("Unexpected space in search searchPattern.");
   }
-  if (getText(pattern) === "__") {
+  if (getText(searchPattern) === "__") {
     return true;
   }
-  if (!(pattern instanceof Tree)) {
+  if (!(searchPattern instanceof Tree)) {
     return false;
   }
   let treeChildrenWithoutSpaces = tree.children.filter(
     child => !(child instanceof Space)
   );
-  let patternChildrenWithoutSpaces = pattern.children.filter(
+  let searchPatternChildrenWithoutSpaces = searchPattern.children.filter(
     child => !(child instanceof Space)
   );
   if (
-    tree.nodeType !== pattern.nodeType ||
-    treeChildrenWithoutSpaces.length !== patternChildrenWithoutSpaces.length
+    tree.nodeType !== searchPattern.nodeType ||
+    treeChildrenWithoutSpaces.length !==
+      searchPatternChildrenWithoutSpaces.length
   ) {
     // TODO: Consider being more flexible, e.g. a function call with a variable number of arguments will not match
     // unless it has the exact same number of arguments.
@@ -50,18 +52,18 @@ export function treesMatch(tree: Tree, pattern: Node) {
   }
   for (let i = 0; i < treeChildrenWithoutSpaces.length; i++) {
     let child = treeChildrenWithoutSpaces[i];
-    let patternChild = patternChildrenWithoutSpaces[i];
+    let searchPatternChild = searchPatternChildrenWithoutSpaces[i];
     if (child instanceof Tree) {
-      if (!treesMatch(child, patternChild)) {
+      if (!treesMatch(child, searchPatternChild)) {
         return false;
       }
-    } else if (child instanceof Token && patternChild instanceof Token) {
-      if (child.tokenType !== patternChild.tokenType) {
+    } else if (child instanceof Token && searchPatternChild instanceof Token) {
+      if (child.tokenType !== searchPatternChild.tokenType) {
         return false;
       }
-      if (patternChild.text.indexOf("__") !== -1) {
+      if (searchPatternChild.text.indexOf("__") !== -1) {
         // Ignore text, match anything.
-      } else if (child.text !== patternChild.text) {
+      } else if (child.text !== searchPatternChild.text) {
         return false;
       }
     } else {
@@ -84,17 +86,17 @@ function getText(node: Token | Tree): string {
 
 export function transformTree(
   tree: Tree,
-  pattern: Node,
+  searchPattern: Node,
   transform: (matchedTree: Tree) => Node
 ): Node {
   let cloned = cloneTree(tree);
-  if (treesMatch(tree, pattern)) {
+  if (treesMatch(tree, searchPattern)) {
     return transform(cloned);
   }
   for (let i = 0; i < cloned.children.length; i++) {
     let child = cloned.children[i];
     if (child instanceof Tree) {
-      cloned.children[i] = transformTree(child, pattern, transform);
+      cloned.children[i] = transformTree(child, searchPattern, transform);
     }
   }
   return cloned;
