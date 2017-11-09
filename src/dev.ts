@@ -2,10 +2,10 @@ import * as antlr from "./antlr";
 import * as fs from "fs";
 import * as path from "path";
 import * as tools from "./tools";
-import * as ts from "typescript";
 import * as tsParsing from "./typescript";
-import * as util from "util";
 
+import { JavaLexer } from "./parsers/java/JavaLexer";
+import { JavaParser } from "./parsers/java/JavaParser";
 import { Tree } from "./nodes";
 
 function runJavaExample() {
@@ -13,14 +13,30 @@ function runJavaExample() {
     path.join(__dirname, "example", "Example.java"),
     "utf8"
   );
-  let tree = antlr.parse(code, parser => parser.compilationUnit());
+  let tree = antlr.parse(
+    JavaLexer,
+    JavaParser,
+    parser => parser.compilationUnit(),
+    code
+  );
   if (!(tree instanceof Tree)) {
     throw new Error();
   }
   let mutatedTree = tools.transformTree(
     tree,
-    antlr.parse(`System.out.println(__);`, parser => parser.statement()),
-    matchedTree => antlr.parse(`alert("Hi!");`, parser => parser.statement())
+    antlr.parse(
+      JavaLexer,
+      JavaParser,
+      parser => parser.statement(),
+      `System.out.println(__);`
+    ),
+    matchedTree =>
+      antlr.parse(
+        JavaLexer,
+        JavaParser,
+        parser => parser.statement(),
+        `alert("Hi!");`
+      )
   );
   console.log(tools.printSource(mutatedTree));
 }

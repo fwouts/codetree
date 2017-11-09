@@ -1,20 +1,17 @@
 import * as antlr from "antlr4ts";
-import * as fs from "fs";
-import * as path from "path";
-import * as util from "util";
 
 import { Node, Space, Token, Tree } from "./nodes";
 
-import { JavaLexer } from "./parsers/java/JavaLexer";
-import { JavaParser } from "./parsers/java/JavaParser";
 import { TerminalNode } from "antlr4ts/tree/TerminalNode";
 
-export function parse<T extends antlr.ParserRuleContext>(
-  code: string,
-  rootNode: (parser: JavaParser) => T
+export function parse<L extends antlr.Lexer, P extends antlr.Parser>(
+  lexerConstructor: new (inputStream: antlr.ANTLRInputStream) => L,
+  parserConstructor: new (tokenStream: antlr.TokenStream) => P,
+  rootNode: (parser: P) => antlr.ParserRuleContext,
+  code: string
 ): Node {
   let inputStream = new antlr.ANTLRInputStream(code);
-  let lexer = new JavaLexer(inputStream);
+  let lexer = new lexerConstructor(inputStream);
   lexer.removeErrorListeners();
   lexer.addErrorListener({
     syntaxError(
@@ -30,7 +27,7 @@ export function parse<T extends antlr.ParserRuleContext>(
     }
   });
   let tokenStream = new antlr.CommonTokenStream(lexer);
-  let parser = new JavaParser(tokenStream);
+  let parser = new parserConstructor(tokenStream);
   parser.removeErrorListeners();
   parser.addErrorListener({
     syntaxError(

@@ -8,7 +8,6 @@ import { Lexer } from 'antlr4ts/Lexer';
 import { LexerATNSimulator } from 'antlr4ts/atn/LexerATNSimulator';
 import { NotNull } from 'antlr4ts/Decorators';
 import { Override } from 'antlr4ts/Decorators';
-import { RuleContext } from 'antlr4ts/RuleContext';
 import { Vocabulary } from 'antlr4ts/Vocabulary';
 import { VocabularyImpl } from 'antlr4ts/VocabularyImpl';
 
@@ -212,7 +211,6 @@ export class JavaLexer extends Lexer {
 	@Override
 	public get modeNames(): string[] { return JavaLexer.modeNames; }
 
-	private static readonly _serializedATNSegments: number = 2;
 	private static readonly _serializedATNSegment0: string =
 		"\x03\uAF6F\u8320\u479D\uB75C\u4880\u1605\u191C\uAB37\x02q\u03AF\b\x01"+
 		"\x04\x02\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06"+
