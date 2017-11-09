@@ -1,13 +1,13 @@
 {
   "name": "codetree",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Francois Wouts",
   "repository": "https://github.com/fwouts/codetree",
   "license": "MIT",
   "scripts": {
     "dev": "nodemon -e json,ts,ast --exec ./node_modules/.bin/ts-node -- ./example/dev.ts",
     "build": "rimraf dist && tsc && cp package.json dist/src/package.json && cd dist/src && npm install",
-    "publish": "cd dist/src && npm publish",
+    "publish": "npm publish dist/src",
     "generate-grammars": "cd example/parsers/java && antlr4ts -no-listener -no-visitor JavaParser.g4 JavaLexer.g4"
   },
   "devDependencies": {
