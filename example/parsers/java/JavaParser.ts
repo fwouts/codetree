@@ -10,6 +10,8 @@ import { Override } from 'antlr4ts/Decorators';
 import { Parser } from 'antlr4ts/Parser';
 import { ParserRuleContext } from 'antlr4ts/ParserRuleContext';
 import { ParserATNSimulator } from 'antlr4ts/atn/ParserATNSimulator';
+import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
+import { ParseTreeVisitor } from 'antlr4ts/tree/ParseTreeVisitor';
 import { RecognitionException } from 'antlr4ts/RecognitionException';
 import { RuleContext } from 'antlr4ts/RuleContext';
 import { RuleVersion } from 'antlr4ts/RuleVersion';
@@ -4885,6 +4887,7 @@ export class JavaParser extends Parser {
 		let _parentctx: ParserRuleContext = this._ctx;
 		let _parentState: number = this.state;
 		let _localctx: ExpressionContext = new ExpressionContext(this._ctx, _parentState);
+		let _prevctx: ExpressionContext = _localctx;
 		let _startState: number = 162;
 		this.enterRecursionRule(_localctx, 162, JavaParser.RULE_expression, _p);
 		let _la: number;
@@ -5037,6 +5040,7 @@ export class JavaParser extends Parser {
 			while ( _alt!==2 && _alt!==ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt===1 ) {
 					if ( this._parseListeners!=null ) this.triggerExitRuleEvent();
+					_prevctx = _localctx;
 					{
 					this.state = 1157;
 					this._errHandler.sync(this);
@@ -6717,6 +6721,7 @@ export class JavaParser extends Parser {
 		return true;
 	}
 
+	private static readonly _serializedATNSegments: number = 3;
 	private static readonly _serializedATNSegment0: string =
 		"\x03\uAF6F\u8320\u479D\uB75C\u4880\u1605\u191C\uAB37\x03q\u0556\x04\x02"+
 		"\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07"+

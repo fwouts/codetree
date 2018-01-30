@@ -11,14 +11,14 @@
     "generate-grammars": "cd example/parsers/java && antlr4ts -no-listener -no-visitor JavaParser.g4 JavaLexer.g4"
   },
   "devDependencies": {
-    "@types/node": "^7.0.46",
+    "@types/node": "^9.4.0",
     "antlr4ts-cli": "^0.4.0-alpha.4",
     "nodemon": "^1.11.0",
     "rimraf": "^2.6.2",
-    "ts-node": "^3.0.2"
+    "ts-node": "^4.1.0"
   },
   "dependencies": {
-    "antlr4ts": "^0.4.0-alpha.4",
-    "typescript": "^2.6.1"
+    "antlr4ts": "^0.4.1-alpha.0",
+    "typescript": "^2.8.0-dev.20180130"
   }
 }
