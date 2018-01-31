@@ -32,7 +32,7 @@ export function findTree(
   return null;
 }
 
-export function treesMatch(tree: nodes.Tree, searchPattern: nodes.Node) {
+function treesMatch(tree: nodes.Tree, searchPattern: nodes.Node) {
   if (searchPattern instanceof nodes.Space) {
     throw new Error("Unexpected space in search searchPattern.");
   }
