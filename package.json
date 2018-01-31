@@ -6,13 +6,19 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon -e json,ts,ast --exec ./node_modules/.bin/ts-node -- ./example/dev.ts",
+    "test": "mocha -r ts-node/register src/**/*.spec.ts",
+    "test:watch": "mocha -r ts-node/register -w --watch-extensions ts src/**/*.spec.ts",
     "build": "rimraf dist && tsc && cp package.json dist/src/package.json && cp README.md dist/src/README.md && cd dist/src && npm install",
     "publish": "npm publish dist/src",
     "generate-grammars": "cd example/parsers/java && antlr4ts -no-listener -no-visitor JavaParser.g4 JavaLexer.g4"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.2",
+    "@types/mocha": "^2.2.47",
     "@types/node": "^9.4.0",
     "antlr4ts-cli": "^0.4.0-alpha.4",
+    "chai": "^4.1.2",
+    "mocha": "^5.0.0",
     "nodemon": "^1.11.0",
     "rimraf": "^2.6.2",
     "ts-node": "^4.1.0"
