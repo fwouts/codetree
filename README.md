@@ -1,5 +1,7 @@
 # CodeTree
 
+[![NPM](https://img.shields.io/npm/v/codetree.svg)](https://www.npmjs.com/package/codetree) [![Build status](https://img.shields.io/circleci/project/github/fwouts/codetree.svg)](https://circleci.com/gh/fwouts/codetree)
+
 CodeTree is an ES6 library (written in TypeScript) that helps transform code easily.
 
 ## Transforming TypeScript or JavaScript code
@@ -124,12 +126,8 @@ console.log(codeTree.printSource(mutatedTree));
 
 # FAQ
 
-## Why not simply use search-and-replace or regular expressions?
+## Why not use search-and-replace or regular expressions?
 
 Unlike search-and-replace approaches, CodeTree operates on "parse trees", and not simply strings. This means that you don't have to worry about spacing, or comments in the middle of the code you're trying to match.
 
-Of course, CodeTree may be overkill for simple changes. It's simply one more tool at your disposal.
-
-## Where are the tests?
-
-Yes, I should probably write some! For context, CodeTree was written on 8 November 2017. I'll try to write them in the upcoming week.
+Of course, CodeTree may be overkill for simple changes. It's just one more tool at your disposal.
