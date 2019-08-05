@@ -20,7 +20,7 @@
     "chai": "^4.2.0",
     "mocha": "^5.0.0",
     "nodemon": "^1.11.0",
-    "rimraf": "^2.6.2",
+    "rimraf": "^2.6.3",
     "ts-node": "^4.1.0"
   },
   "dependencies": {
