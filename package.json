@@ -19,7 +19,7 @@
     "antlr4ts-cli": "^0.5.0-alpha.3",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
-    "nodemon": "^1.19.4",
+    "nodemon": "^2.0.0",
     "rimraf": "^3.0.0",
     "ts-node": "^8.5.2"
   },
