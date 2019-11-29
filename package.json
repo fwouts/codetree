@@ -21,7 +21,7 @@
     "mocha": "^6.2.2",
     "nodemon": "^2.0.1",
     "rimraf": "^3.0.0",
-    "ts-node": "^8.5.3"
+    "ts-node": "^8.5.4"
   },
   "dependencies": {
     "antlr4ts": "^0.4.1-alpha.0",
