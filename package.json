@@ -13,7 +13,7 @@
     "generate-grammars": "cd example/parsers/java && antlr4ts -no-listener -no-visitor JavaParser.g4 JavaLexer.g4"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.10",
+    "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.9.1",
     "antlr4ts-cli": "^0.5.0-alpha.3",
